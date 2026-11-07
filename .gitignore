@@ -35,3 +35,10 @@ Thumbs.db
 
 # Keep capturas folder tracked
 !capturas/.gitkeep
+
+# Local report drafts and build scripts
+generar_pdf.sh
+reporte_tarea_8.html
+reporte_tarea_8.pdf
+*.pdf
+REPORTE_TAREA_8.md
