@@ -1,6 +1,8 @@
 # ==============================================================================
 # INFRAESTRUCTURA COMO CÓDIGO - TAREA 8 (REFACTORIZACIÓN MODULAR)
 # Materia: Infraestructura y Desarrollo Continuo - ITESO
+# Orquestación: Terraform Cloud (HCP Terraform) con VCS Trigger
+# Repositorio: https://github.com/cypher-27/infra-t8
 # ==============================================================================
 
 provider "cloudflare" {
