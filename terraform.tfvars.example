@@ -1,0 +1,8 @@
+# ==============================================================================
+# Ejemplo de variables para despliegue local o configuración en Terraform Cloud
+# ==============================================================================
+account_id       = "ee3ae89079b1a74d9949bde809c32f66"
+api_token        = "TU_CLOUDFLARE_API_TOKEN_AQUI"
+worker_name      = "tarea8-worker"
+d1_database_name = "tarea8-db"
+azure_api_url    = ""
