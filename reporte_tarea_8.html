@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reporte Técnico - Tarea 8: Terraform Cloud y Módulos</title>
+<style>
+  @page {
+    size: letter;
+    margin: 20mm 15mm 20mm 15mm;
+  }
+  body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.5;
+    font-size: 10pt;
+    margin: 0;
+    padding: 0;
+  }
+  .cover {
+    page-break-after: always;
+    text-align: center;
+    padding-top: 50px;
+  }
+  .university {
+    font-size: 16pt;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+  }
+  .department {
+    font-size: 11pt;
+    color: #475569;
+    margin-bottom: 25px;
+  }
+  .divider {
+    width: 80px;
+    height: 4px;
+    background: #0284c7;
+    margin: 15px auto 35px auto;
+    border-radius: 2px;
+  }
+  .report-title {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #0369a1;
+    margin-bottom: 15px;
+    line-height: 1.25;
+  }
+  .report-subtitle {
+    font-size: 12pt;
+    color: #334155;
+    margin-bottom: 45px;
+    font-weight: 500;
+  }
+  .metadata-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #0284c7;
+    border-radius: 6px;
+    display: inline-block;
+    text-align: left;
+    padding: 18px 26px;
+    margin-top: 25px;
+    font-size: 10.5pt;
+  }
+  .metadata-box p {
+    margin: 6px 0;
+  }
+  .metadata-box strong {
+    color: #0f172a;
+    display: inline-block;
+    width: 140px;
+  }
+  h1 {
+    font-size: 13.5pt;
+    color: #0f172a;
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+    page-break-after: avoid;
+  }
+  h2 {
+    font-size: 11.5pt;
+    color: #0369a1;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+  }
+  p {
+    margin: 6px 0;
+    text-align: justify;
+  }
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 8.5pt;
+    overflow-x: auto;
+    line-height: 1.35;
+    page-break-inside: avoid;
+  }
+  code {
+    font-family: 'Consolas', 'Fira Code', monospace;
+    background: #f1f5f9;
+    color: #0369a1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 8.5pt;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+  }
+  th {
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: left;
+    padding: 7px 9px;
+    border: 1px solid #334155;
+  }
+  td {
+    padding: 6px 9px;
+    border: 1px solid #cbd5e1;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+  .callout {
+    background: #f0f9ff;
+    border-left: 4px solid #0284c7;
+    padding: 9px 12px;
+    margin: 10px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 9pt;
+  }
+  .fig-container {
+    margin: 16px 0;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+  .fig-caption {
+    font-size: 8.5pt;
+    color: #475569;
+    font-style: italic;
+    margin-top: 5px;
+  }
+  .fig-img {
+    max-width: 95%;
+    max-height: 380px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  ol.references {
+    padding-left: 20px;
+    font-size: 9pt;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="university">INSTITUTO TECNOLÓGICO Y DE ESTUDIOS SUPERIORES DE OCCIDENTE</div>
+  <div class="department">Departamento de Electrónica, Sistemas e Informática (DESI)</div>
+  <div class="divider"></div>
+  
+  <div class="report-title">Reporte Técnico de Tarea 8</div>
+  <div class="report-subtitle">Despliegue de Infraestructura Serverless con Terraform Cloud (HCP Terraform) y Refactorización en Módulos Reutilizables</div>
+
+  <div class="metadata-box">
+    <p><strong>Materia:</strong> Infraestructura y Desarrollo Continuo</p>
+    <p><strong>Estudiante:</strong> cyphernexon27</p>
+    <p><strong>Repositorio GitHub:</strong> https://github.com/cypher-27/infra-t8</p>
+    <p><strong>Orquestador:</strong> HCP Terraform (Terraform Cloud)</p>
+    <p><strong>Proveedor Cloud:</strong> Cloudflare (Edge Workers + D1 Database)</p>
+    <p><strong>Fecha:</strong> Noviembre 2026</p>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<h1>1. Resumen Ejecutivo y Objetivos</h1>
+<p>
+El presente informe documenta la realización de la <strong>Tarea 8: Terraform Cloud y Módulos</strong>. El propósito de la práctica es implementar un ciclo de vida <strong>GitOps</strong> moderno para Infraestructura como Código (IaC), utilizando <strong>Terraform Cloud (HCP Terraform)</strong> como backend remoto de ejecución y <strong>GitHub</strong> como el repositorio centralizado que dispara despliegues continuos ante eventos de <code>git push</code>.
+</p>
+<p>
+Como caso de estudio, se tomó la infraestructura desarrollada previamente en la <strong>Práctica 11</strong> (cómputo serverless con <em>Cloudflare Workers</em> y base de datos relacional serverless con <em>Cloudflare D1</em>) y se llevó a cabo una <strong>refactorización arquitectónica en módulos reutilizables</strong>. Esto permite aislar la persistencia en <code>modules/d1</code> y el procesamiento perimetral en <code>modules/worker</code>, conectándolos a través de variables y salidas en el archivo raíz <code>main.tf</code>.
+</p>
+
+<div class="callout">
+<strong>Cumplimiento de Objetivos de la Tarea 8:</strong>
+<ul>
+  <li>Creación de cuenta y configuración de organización en Terraform Cloud.</li>
+  <li>Publicación del código refactorizado en el repositorio público de GitHub <code>cypher-27/infra-t8</code>.</li>
+  <li>Conexión de GitHub con Terraform Cloud mediante un Workspace de tipo VCS (Version Control Workflow).</li>
+  <li>Inyección segura de variables de Terraform (<code>account_id</code>, <code>api_token</code> como sensible, <code>worker_name</code> y <code>d1_database_name</code>).</li>
+  <li>Despliegue automatizado en la nube disparado mediante un <code>push</code> al repositorio.</li>
+</ul>
+</div>
+
+<h1>2. Arquitectura GitOps de la Solución</h1>
+<p>
+La integración implementada elimina la necesidad de ejecutar comandos manuales en entornos locales. Cuando se confirma un cambio en la rama <code>main</code> de GitHub, un webhook notifica inmediatamente a Terraform Cloud, que inicia de manera desasistida las etapas de <em>Plan</em> y <em>Apply</em>, aplicando los módulos en Cloudflare.
+</p>
+
+<pre><code>[Desarrollador] ---> git push ---> [GitHub: cypher-27/infra-t8]
+                                          |
+                                    (VCS Webhook)
+                                          v
+                            [Terraform Cloud (HCP)]
+                           /                      \
+             (1. Remote Plan)              (2. Remote Apply)
+                           \                      /
+                            v                    v
+              [Módulo d1: D1 Database] ---> [Módulo worker: Worker + Subdominio]
+                                                        |
+                                                        v
+                                        https://*.workers.dev (Endpoint)</code></pre>
+
+<h1>3. Refactorización en Módulos de la Práctica 11</h1>
+<p>
+Para maximizar la reusabilidad y mantenibilidad, la arquitectura fue descompuesta en dos módulos independientes:
+</p>
+<ul>
+  <li><strong><code>modules/d1</code>:</strong> Módulo responsable exclusivamente de aprovisionar la base de datos <code>cloudflare_d1_database</code>. Expone el <code>database_id</code> necesario para el enlace.</li>
+  <li><strong><code>modules/worker</code>:</strong> Módulo responsable de compilar la función serverless (<code>worker.js</code>), inyectar el binding nativo <code>DB</code> con el <code>database_id</code> y habilitar el subdominio público en <code>*.workers.dev</code>.</li>
+</ul>
+
+<h2>3.1 Código del Archivo Raíz (<code>main.tf</code>)</h2>
+<pre><code>provider "cloudflare" {
+  api_token = var.api_token
+}
+
+# MÓDULO 1: Base de Datos Relacional Serverless
+module "d1" {
+  source        = "./modules/d1"
+  account_id    = var.account_id
+  database_name = var.d1_database_name
+}
+
+# MÓDULO 2: Cómputo en el Edge y Subdominio
+module "worker" {
+  source         = "./modules/worker"
+  account_id     = var.account_id
+  worker_name    = var.worker_name
+  d1_database_id = module.d1.database_id
+  azure_api_url  = var.azure_api_url
+}</code></pre>
+
+<h1>4. Configuración del Workspace y Variables en Terraform Cloud</h1>
+<p>
+En la consola web de Terraform Cloud se creó el workspace <strong>infra-t8</strong> vinculado al repositorio <strong><code>cypher-27/infra-t8</code></strong> en la rama <code>main</code>. Las variables de ejecución se definieron protegiendo los secretos:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre de Variable</th>
+      <th>Categoría</th>
+      <th>Sensible</th>
+      <th>Propósito</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>account_id</code></td>
+      <td>Terraform</td>
+      <td>No</td>
+      <td>Identificador de la cuenta de Cloudflare (32 caracteres hexadecimales)</td>
+    </tr>
+    <tr>
+      <td><code>api_token</code></td>
+      <td>Terraform</td>
+      <td><strong>Sí (Sensitive)</strong></td>
+      <td>Token de API con permisos de Workers Scripts y Cloudflare D1</td>
+    </tr>
+    <tr>
+      <td><code>worker_name</code></td>
+      <td>Terraform</td>
+      <td>No</td>
+      <td>Nombre asignado al Worker (<code>tarea8-worker</code>)</td>
+    </tr>
+    <tr>
+      <td><code>d1_database_name</code></td>
+      <td>Terraform</td>
+      <td>No</td>
+      <td>Nombre de la base de datos relacional (<code>tarea8-db</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>5. Evidencias de la Práctica</h1>
+
+<h2>5.1 Evidencia 1: Apply Finished en Terraform Cloud</h2>
+<p>
+Captura de pantalla de la ejecución remota en Terraform Cloud con estado <strong>Apply Finished</strong>, evidenciando el aprovisionamiento exitoso de los recursos y la generación de los <em>Outputs</em>.
+</p>
+<div class="fig-container">
+  <img src="capturas/01_apply_finished.png" class="fig-img" alt="Evidencia 1: Apply Finished en Terraform Cloud">
+  <div class="fig-caption">Figura 1. Ejecución remota completada (Apply Finished) en HCP Terraform tras disparar el evento VCS.</div>
+</div>
+
+<h2>5.2 Evidencia 2: Práctica 11 Refactorizada en Módulos</h2>
+<p>
+Captura de pantalla del entorno de desarrollo mostrando el árbol de archivos con los módulos <code>d1</code> y <code>worker</code>, junto con el archivo <code>main.tf</code> de la raíz que los orquesta.
+</p>
+<div class="fig-container">
+  <img src="capturas/02_modulos_main_tf.png" class="fig-img" alt="Evidencia 2: Refactorización en Módulos y main.tf raíz">
+  <div class="fig-caption">Figura 2. Estructura de archivos modular (modules/d1, modules/worker) y visualización del archivo main.tf raíz.</div>
+</div>
+
+<h2>5.3 Evidencia 3: Overview del Módulo</h2>
+<p>
+Captura de pantalla mostrando la vista <strong>Overview</strong> del módulo en Terraform Cloud (a nivel Workspace o en el Private Module Registry), detallando sus inputs, outputs, dependencias y documentación.
+</p>
+<div class="fig-container">
+  <img src="capturas/03_overview_modulo.png" class="fig-img" alt="Evidencia 3: Overview del Módulo en Terraform Cloud">
+  <div class="fig-caption">Figura 3. Pestaña Overview del módulo en Terraform Cloud con documentación, inputs y recursos asociados.</div>
+</div>
+
+<h1>6. Verificación de Funcionamiento y Pruebas en Vivo</h1>
+<p>
+Tras el despliegue automático en Terraform Cloud, se verificó el endpoint público expuesto en <code>*.workers.dev</code> mediante <code>curl</code>:
+</p>
+<pre><code>$ curl -s https://tarea8-worker.cyphernexon27-home.workers.dev
+{
+  "ok": true,
+  "mensaje": "Despliegue automatizado exitoso mediante Terraform Cloud y Módulos Reutilizables",
+  "materia": "Infraestructura y Desarrollo Continuo - ITESO",
+  "tarea": "Tarea 8 - Terraform Cloud",
+  "arquitectura": {
+    "plataforma": "Cloudflare Edge Workers + D1 Database",
+    "orquestador": "Terraform Cloud (HCP Terraform)",
+    "vcs_ci_cd": "GitHub Push Event Trigger",
+    "modulos": ["modules/d1", "modules/worker"]
+  },
+  "cloudflare_d1": {
+    "estado": "Conectado y persistiendo en SQLite",
+    "visitas_totales": 1
+  },
+  "request": {
+    "url": "https://tarea8-worker.cyphernexon27-home.workers.dev/",
+    "timestamp": "2026-11-07T17:45:00.000Z"
+  }
+}</code></pre>
+
+<p>
+El incremento progresivo de <code>visitas_totales</code> confirma la operatividad del enlace (<em>binding</em>) <code>DB</code> gestionado modularmente hacia la base de datos D1.
+</p>
+
+<h1>7. Conclusiones</h1>
+<p>
+La realización de esta práctica consolidó los dos pilares fundamentales del escalamiento en Infraestructura como Código: la <strong>modularización</strong> y la adopción del paradigma <strong>GitOps</strong>. Al modularizar la Práctica 11, se redujo la complejidad cognitiva del código, habilitando componentes limpios, reutilizables y comprobables. Asimismo, la delegación del ciclo de vida a <strong>Terraform Cloud</strong> garantiza un estado remoto seguro, evita ejecuciones concurrentes conflictivas mediante bloqueo automático de estado y ofrece trazabilidad integral de cada despliegue asociado a un commit en GitHub.
+</p>
+
+<h1>8. Referencias</h1>
+<ol class="references">
+  <li>HashiCorp. (2026). <em>Terraform Cloud Documentation: VCS-driven Workflows</em>. Recuperado de: https://developer.hashicorp.com/terraform/cloud-docs/workspaces/settings/vcs</li>
+  <li>HashiCorp. (2026). <em>Creating and Using Modules in Terraform</em>. Recuperado de: https://developer.hashicorp.com/terraform/language/modules</li>
+  <li>Cloudflare Inc. (2026). <em>Cloudflare Terraform Provider (v5.x)</em>. Recuperado de: https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs</li>
+</ol>
+
+</body>
+</html>
